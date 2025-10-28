@@ -164,3 +164,65 @@ paths:
           description: No autorizado (Token no válido o expirado).
         '500':
           description: Error interno del servidor.
+    patch:
+      summary: Modifica una reserva existente (cambio de asiento).
+      tags: [Reservas]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cui, numero_asiento_actual, numero_asiento_nuevo]
+              properties:
+                cui:
+                  type: string
+                  description: CUI del pasajero (debe coincidir).
+                  example: '1265455890306'
+                numero_asiento_actual:
+                  type: string
+                  description: El código del asiento actual (ej. 'I3').
+                  example: 'I3'
+                numero_asiento_nuevo:
+                  type: string
+                  description: El código del nuevo asiento (ej. 'I5').
+                  example: 'I5'
+      responses:
+        '200':
+          description: Reserva modificada exitosamente.
+        '400':
+          description: Error (asientos no coinciden, nuevo asiento ocupado, misma clase, etc.).
+        '401':
+          description: No autorizado (Token no válido).
+          
+    # --- AÑADIR ESTE BLOQUE DELETE ---
+    delete:
+      summary: Cancela una reserva existente.
+      tags: [Reservas]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cui, numero_asiento]
+              properties:
+                cui:
+                  type: string
+                  description: CUI del pasajero (debe coincidir).
+                  example: '1265455890306'
+                numero_asiento:
+                  type: string
+                  description: El código del asiento a cancelar (ej. 'I5').
+                  example: 'I5'
+      responses:
+        '200':
+          description: Reserva cancelada exitosamente.
+        '400':
+          description: Error (los datos no coinciden).
+        '401':
+          description: No autorizado (Token no válido).
