@@ -1,0 +1,77 @@
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered">
+
+            <div class="column is-half">
+                <div class="box">
+                    <h1 class="title texto-neon">DESCARGAR ASIENTOS</h1>
+                    <p class="subtitle">Generar archivo XML con todas las reservas.</p>
+                    
+                    <div class="notification is-danger" ng-if="vm.errorDescarga">
+                        {{ vm.errorDescarga }}
+                    </div>
+
+                    <button class="button is-primary is-fullwidth" 
+                            ng-click="vm.descargarXML()" 
+                            ng-disabled="vm.cargandoDescarga">
+                        {{ vm.cargandoDescarga ? 'GENERANDO...' : 'Generar y Descargar XML' }}
+                    </button>
+                </div>
+            </div>
+
+            <div class="column is-half">
+                <div class="box">
+                    <h1 class="title texto-neon">CARGAR ASIENTOS</h1>
+                    <p class="subtitle">Cargar reservas desde un archivo XML.</p>
+                    
+                    <div class="notification is-danger" ng-if="vm.errorCarga">
+                        {{ vm.errorCarga }}
+                    </div>
+
+                    <form ng-submit="vm.cargarXML()">
+                        <div class="field is-grouped is-grouped-centered">
+                            <div class="control">
+                                <div class="file is-primary">
+                                    <label class="file-label">
+                                        <input class="file-input" type="file" name="resume" 
+                                            file-model="vm.archivoXML" required>
+                                        <span class="file-cta">
+                                            <span class="file-icon">
+                                                <i class="fas fa-upload"></i> </span>
+                                            <span class="file-label" style="font-family: var(--font-main);">
+                                                {{ vm.archivoXML.name || 'Elegir archivo…' }}
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="control">
+                                <button class="button is-success" 
+                                        type="submit" 
+                                        ng-disabled="vm.cargandoCarga || !vm.archivoXML">
+                                    {{ vm.cargandoCarga ? 'PROCESANDO...' : 'Procesar Archivo' }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="box" style="background-color: rgba(0,0,0,0.5); margin-top: 20px;"
+                        ng-if="vm.resumenCarga">
+                        <h2 class="title is-5">RESUMEN DE CARGA</h2>
+                        <p>Asientos cargados con éxito: 
+                            <span class="texto-neon">{{ vm.resumenCarga.asientos_cargados_exito }}</span>
+                        </p>
+                        <p>Asientos con error: 
+                            <span class="texto-neon">{{ vm.resumenCarga.asientos_con_error }}</span>
+                        </p>
+                        <p>Tiempo de procesamiento: 
+                            <span class="texto-neon">{{ vm.resumenCarga.tiempo_procesamiento_ms | number:0 }} ms</span>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

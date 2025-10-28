@@ -1,0 +1,64 @@
+<section class="hero is-fullheight">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            
+            <h1 class="title texto-neon">
+                [REGISTRO DE NUEVA VARIANTE]
+            </h1>
+            <p class="subtitle">
+                DOMINIOS PERMITIDOS: @GMAIL.COM, @OUTLOOK.COM
+            </p>
+
+            <div class="columns is-centered">
+                <div class="column is-one-third">
+                    <div class="box">
+                        <form ng-submit="vm.registrarUsuario()">
+                            
+                            <div class="notification is-danger" ng-if="vm.error">
+                                {{ vm.error }}
+                            </div>
+                            <div class="notification is-success" ng-if="vm.exito">
+                                {{ vm.exito }}
+                            </div>
+
+                            <div class="field">
+                                <label class="label">EMAIL (gmail/outlook)</label>
+                                <div class="control">
+                                    <input class="input" type="email" placeholder="correo electronico"
+                                        ng-model="vm.usuario.correo_electronico" required>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <label class="label">CONTRASEÑA</label>
+                                <div class="control">
+                                    <input class="input" type="password" placeholder="********"
+                                        ng-model="vm.usuario.contrasena" required>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">CONFIRMAR CONTRASEÑA</label>
+                                <div class="control">
+                                    <input class="input" type="password" placeholder="********"
+                                        ng-model="vm.usuario.confirmar_contrasena" required>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <button class="button is-primary is-fullwidth" 
+                                        type="submit" ng-disabled="vm.cargando">
+                                    {{ vm.cargando ? 'CREANDO...' : 'CREAR USUARIO' }}
+                                </button>
+                            </div>
+                        </form>
+                        <hr style="background-color: var(--orange); height: 1px; opacity: 0.3;">
+                        <p class="subtitle is-6">
+                            ¿Ya tienes cuenta? <a href="#!/login" style="color: var(--orange);">Iniciar Sesión</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

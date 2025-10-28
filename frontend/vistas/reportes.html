@@ -1,0 +1,73 @@
+<section class="section">
+    <div class="container">
+        <div class="box">
+            <h1 class="title texto-neon">REPORTES DEL SISTEMA</h1>
+            
+            <div class="notification is-danger" ng-if="vm.error">
+                {{ vm.error }}
+            </div>
+            
+            <nav class="panel" ng-if="!vm.cargando">
+                <p class="panel-heading" style="background-color: var(--orange); color: var(--black);">
+                    ESTADÍSTICAS GENERALES
+                </p>
+                <a class="panel-block is-active">
+                    <span class="panel-icon" style="color: var(--orange);"> > </span>
+                    Usuarios Creados: <span class="texto-neon" style="margin-left: auto;">{{ vm.stats.total_usuarios }}</span>
+                </a>
+
+                <div class="panel-block" 
+                    ng-repeat="item in vm.stats.reservas_por_usuario | orderBy:'-total_reservas'">
+                    <span class="panel-icon" style="color: var(--orange);"> > </span>
+                    Reservas ({{ item.correo_electronico }}): 
+                    <span class="texto-neon" style="margin-left: auto;">{{ item.total_reservas }}</span>
+                </div>
+            </nav>
+
+            <nav class="panel" ng-if="!vm.cargando">
+                <p class="panel-heading" style="background-color: var(--orange); color: var(--black);">
+                    ESTADÍSTICAS DE ASIENTOS
+                </p>
+                <a class="panel-block">
+                    <span class="panel-icon" style="color: var(--orange);"> > </span>
+                    Negocios Ocupados: <span class="texto-neon" style="margin-left: auto;">{{ vm.stats.negocios_ocupados }}</span>
+                </a>
+                <a class="panel-block">
+                    <span class="panel-icon" style="color: var(--orange);"> > </span>
+                    Económica Ocupados: <span class="texto-neon" style="margin-left: auto;">{{ vm.stats.economica_ocupados }}</span>
+                </a>
+                <a class="panel-block">
+                    <span class="panel-icon" style="color: var(--orange);"> > </span>
+                    Negocios Libres: <span class="texto-neon" style="margin-left: auto;">{{ vm.stats.negocios_libres }}</span>
+                </a>
+                <a class="panel-block">
+                    <span class="panel-icon" style="color: var(--orange);"> > </span>
+                    Económica Libres: <span class="texto-neon" style="margin-left: auto;">{{ vm.stats.economica_libres }}</span>
+                </a>
+            </nav>
+            
+            <nav class="panel" ng-if="!vm.cargando">
+                <p class="panel-heading" style="background-color: var(--orange); color: var(--black);">
+                    ESTADÍSTICAS DE ACCIONES (No implementado en API)
+                </p>
+                <a class="panel-block">
+                    <span class="panel-icon" style="color: var(--orange);"> > </span>
+                    Seleccionados por Usuario: <span class="texto-neon" style="margin-left: auto;">[N/A]</span>
+                </a>
+                <a class="panel-block">
+                    <span class="panel-icon" style="color: var(--orange);"> > </span>
+                    Seleccionados Aleatorio: <span class="texto-neon" style="margin-left: auto;">[N/A]</span>
+                </a>
+                <a class="panel-block">
+                    <span class="panel-icon" style="color: var(--orange);"> > </span>
+                    Asientos Modificados: <span class="texto-neon" style="margin-left: auto;">[N/A]</span>
+                </a>
+                <a class="panel-block">
+                    <span class="panel-icon" style="color: var(--orange);"> > </span>
+                    Asientos Cancelados: <span class="texto-neon" style="margin-left: auto;">[N/A]</span>
+                </a>
+            </nav>
+
+        </div>
+    </div>
+</section>

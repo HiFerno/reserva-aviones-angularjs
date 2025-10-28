@@ -1,0 +1,52 @@
+<section class="hero is-fullheight">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <h1 class="title texto-neon" style="margin-top: 20px;">
+                [SISTEMA DE RESERVA]
+            </h1>
+            <p class="subtitle">
+                PAGINA DE INICIO DE SESION
+            </p>
+
+            <div class="columns is-centered">
+                <div class="column is-one-third">
+                    <div class="box">
+                        <form ng-submit="vm.iniciarSesion()">
+                            
+                            <div class="notification is-danger" ng-if="vm.error">
+                                {{ vm.error }}
+                            </div>
+
+                            <div class="field">
+                                <label class="label">EMAIL DE AGENTE (gmail/outlook)</label>
+                                <div class="control">
+                                    <input class="input" type="email" placeholder="correo electronico" 
+                                        ng-model="vm.credenciales.correo_electronico" required>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <label class="label">CONTRASEÑA</label>
+                                <div class="control">
+                                    <input class="input" type="password" placeholder="********" 
+                                        ng-model="vm.credenciales.contrasena" required>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <button class="button is-primary is-fullwidth" 
+                                        type="submit" ng-disabled="vm.cargando">
+                                    {{ vm.cargando ? 'INGRESANDO...' : 'INICIAR SESIÓN' }}
+                                </button>
+                            </div>
+                        </form>
+                        <hr style="background-color: var(--orange); height: 1px; opacity: 0.3;">
+                        <p class="subtitle is-6">
+                            ¿Nuevo agente? <a href="#!/registro" style="color: var(--orange);">Crear cuenta</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

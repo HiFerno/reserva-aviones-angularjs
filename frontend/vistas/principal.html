@@ -1,0 +1,119 @@
+<section class="section">
+    <div class="container is-fluid">
+        <h1 class="title texto-neon">SISTEMA DE RESERVA DE ASIENTOS</h1>
+        
+        <div class="columns is-multiline">
+
+            <div class="column is-one-third-desktop is-full-tablet">
+                <div class="box">
+                    <h2 class="title is-4">DATOS DE RESERVA</h2>
+                    
+                    <div class="notification is-danger" ng-if="vm.errorReserva">
+                        {{ vm.errorReserva }}
+                    </div>
+                    <div class="notification is-success" ng-if="vm.exitoReserva">
+                        {{ vm.exitoReserva }}
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Cantidad de Asientos</label>
+                        <div class="control">
+                            <input class="input" type="number" value="1" min="1" ng-model="vm.cantidadAsientos" disabled>
+                            <p class="subtitle is-6">Funcionalidad para 1 asiento a la vez.</p>
+                        </div>
+                    </div>
+
+                    </div>
+
+                <div class="box" ng-if="vm.asientoSeleccionado">
+                    <h2 class="title is-4">DATOS DEL PASAJERO (Asiento: 
+                        <span class="texto-neon">{{ vm.asientoSeleccionado.numero_asiento }}</span>)
+                    </h2>
+                    
+                    <form ng-submit="vm.confirmarReserva()">
+                        <div class="field">
+                            <label class="label">Nombre Completo</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Ej: Patricia Perez" 
+                                       ng-model="vm.pasajero.nombre_pasajero" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">CUI (13 dígitos)</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Ej: 1265455890306" 
+                                       ng-model="vm.pasajero.cui" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="checkbox" style="color: var(--cream);">
+                                <input type="checkbox" ng-model="vm.pasajero.con_equipaje">
+                                ¿Llevará maleta?
+                            </label>
+                        </div>
+                        <div class="field">
+                            <button class="button is-success is-fullwidth" 
+                                    type="submit" ng-disabled="vm.cargandoReserva">
+                                {{ vm.cargandoReserva ? 'CONFIRMANDO...' : 'Confirmar Asiento' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="column is-two-thirds-desktop is-full-tablet">
+                <div class="box">
+                    <h2 class="title is-4">MAPA DE ASIENTOS</h2>
+
+                    <div class="contenedor-mapa-asientos">
+                        
+                        <h3 class="subtitle is-5">CLASE DE NEGOCIOS (Columnas 1-2)</h3>
+                        <div class="cuadricula-asientos cuadricula-negocios">
+                            <div class="etiqueta-asiento"></div>
+                            <div class="etiqueta-asiento">1</div>
+                            <div class="etiqueta-asiento">2</div>
+
+                            <div ng-repeat="fila in ['I', 'G', 'F', 'D', 'C', 'A']" class="fila-asientos">
+                                <div class="etiqueta-fila" data-row="{{fila}}">{{fila}}</div>
+                                <div ng-repeat="col in [1, 2]"
+                                    ng-click="vm.seleccionarAsiento(fila + col)"
+                                    class="asiento"
+                                    ng-class="vm.obtenerClaseAsiento(fila + col)">
+                                    {{fila + col}}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 class="subtitle is-5">CLASE ECONÓMICA (Columnas 3-7)</h3>
+                        <div class="cuadricula-asientos cuadricula-economica">
+                            <div class="etiqueta-asiento"></div>
+                            <div class="etiqueta-asiento">3</div>
+                            <div class="etiqueta-asiento">4</div>
+                            <div class="etiqueta-asiento">5</div>
+                            <div class="etiqueta-asiento">6</div>
+                            <div class="etiqueta-asiento">7</div>
+                            
+                            <div ng-repeat="fila in ['I', 'H', 'G', 'F', 'E', 'D', 'C', 'B', 'A']" class="fila-asientos">
+                                <div class="etiqueta-fila" data-row="{{fila}}">{{fila}}</div>
+                                <div ng-repeat="col in [3, 4, 5, 6, 7]"
+                                    ng-click="vm.seleccionarAsiento(fila + col)"
+                                    class="asiento"
+                                    ng-class="vm.obtenerClaseAsiento(fila + col)">
+                                    {{fila + col}}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<style>
+    .fila-asientos {
+        display: contents; /* Hace que los divs de ng-repeat no arruinen el Grid */
+    }
+</style>

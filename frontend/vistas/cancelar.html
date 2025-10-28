@@ -1,0 +1,45 @@
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-two-thirds">
+                <div class="box">
+                    <h1 class="title texto-neon">CANCELAR RESERVA</h1>
+                    <p class="subtitle">Los datos deben coincidir para proceder.</p>
+                    
+                    <form ng-submit="vm.confirmarCancelacion()">
+                        
+                        <div class="notification is-danger" ng-if="vm.error">
+                            {{ vm.error }}
+                        </div>
+                        <div class="notification is-success" ng-if="vm.exito">
+                            {{ vm.exito }}
+                        </div>
+
+                        <div class="field">
+                            <label class="label">CUI del Pasajero</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Ej: 1265455890306"
+                                    ng-model="vm.cancelacion.cui" required>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <label class="label">Número de Asiento</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Ej: A2"
+                                    ng-model="vm.cancelacion.numero_asiento" required>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <button class="button is-primary is-fullwidth" 
+                                    type="submit" ng-disabled="vm.cargando">
+                                {{ vm.cargando ? 'CANCELANDO...' : 'Confirmar Cancelación' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

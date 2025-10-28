@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es" ng-app="appVuelos">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TVA - Sistema de Reservas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body ng-controller="MainController as vm">
+
+    <nav class.="navbar" role="navigation" aria-label="main navigation" ng-if="vm.mostrarNavbar">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#!/principal">
+                <span class="texto-neon" style="font-size: 28px;">TVA</span>
+            </a>
+            <a role="button" class="navbar-burger" ng-class="{ 'is-active': vm.menuActivo }" ng-click="vm.toggleMenu()">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div id="menuNavbar" class="navbar-menu" ng-class="{ 'is-active': vm.menuActivo }">
+            <div class="navbar-start">
+                <a class="navbar-item" href="#!/principal">Reservar Asientos</a>
+                <a class="navbar-item" href="#!/modificar">Modificar Reserva</a>
+                <a class="navbar-item" href="#!/cancelar">Cancelar Reserva</a>
+                <a class="navbar-item" href="#!/reportes">Reportes</a>
+                <a class="navbar-item" href="#!/archivos">Archivos XML</a>
+            </div>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-primary" ng-click="vm.logout()">
+                            <strong>CERRAR SESION</strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div ng-view></div>
+    </main>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+
+    <script src="js/app.js"></script>
+    
+    <script src="js/servicios/auth.servicio.js"></script>
+    <script src="js/servicios/api.servicio.js"></script>
+
+    <script src="js/controladores/main.controlador.js"></script>
+    <script src="js/controladores/auth.controlador.js"></script>
+    <script src="js/controladores/principal.controlador.js"></script>
+    <script src="js/controladores/modificar.controlador.js"></script>
+    <script src="js/controladores/cancelar.controlador.js"></script>
+    <script src="js/controladores/reportes.controlador.js"></script>
+    <script src="js/controladores/archivos.controlador.js"></script>
+</body>
+</html>
