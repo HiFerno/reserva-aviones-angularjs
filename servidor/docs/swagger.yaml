@@ -1,0 +1,166 @@
+openapi: 3.0.0
+info:
+  title: API de Reserva de Vuelos
+  version: 1.0.0
+  description: Documentación de la API para el sistema de reserva de vuelos.
+servers:
+  - url: http://localhost:4000
+    description: Servidor de Desarrollo
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+tags:
+  - name: Asientos
+    description: Operaciones relacionadas con los asientos del avión.
+  - name: Autenticación
+    description: Operaciones de registro e inicio de sesión.
+  - name: Reservas
+    description: Operaciones para crear y gestionar reservas (Protegido).
+
+paths:
+  /api/asientos:
+    get:
+      summary: Obtiene el estado de todos los asientos del avión.
+      tags: [Asientos]
+      responses:
+        '200':
+          description: Una lista de todos los asientos con su estado (disponible u ocupado).
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    asiento_id:
+                      type: integer
+                      description: El ID único del asiento.
+                      example: 1
+                    numero_asiento:
+                      type: string
+                      description: El código del asiento (ej. 'A1', 'I7').
+                      example: 'I1'
+                    clase:
+                      type: string
+                      description: Clase del asiento.
+                      enum: [Negocios, Económica]
+                      example: 'Negocios'
+                    precio:
+                      type: number
+                      description: El precio base del asiento.
+                      example: 2500.00
+                    estado:
+                      type: string
+                      description: Estado actual del asiento.
+                      enum: [disponible, ocupado]
+                      example: 'disponible'
+        '500':
+          description: Error interno del servidor.
+  /api/auth/registro:
+    post:
+      summary: Registra un nuevo usuario (agente) en el sistema.
+      tags: [Autenticación]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [correo_electronico, contrasena]
+              properties:
+                correo_electronico:
+                  type: string
+                  format: email
+                  description: Email del usuario (solo @gmail.com o @outlook.com).
+                  example: 'agente@gmail.com'
+                contrasena:
+                  type: string
+                  format: password
+                  description: Contraseña (mínimo 6 caracteres).
+                  example: 'password123'
+      responses:
+        '201':
+          description: Usuario registrado exitosamente.
+        '400':
+          description: Error de validación (email ya existe, dominio incorrecto, etc.).
+        '500':
+          description: Error interno del servidor.
+          
+  /api/auth/login:
+    post:
+      summary: Inicia sesión y obtiene un token JWT.
+      tags: [Autenticación]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [correo_electronico, contrasena]
+              properties:
+                correo_electronico:
+                  type: string
+                  format: email
+                  example: 'agente@gmail.com'
+                contrasena:
+                  type: string
+                  format: password
+                  example: 'password123'
+      responses:
+        '200':
+          description: Inicio de sesión exitoso. Devuelve un token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: 'eyJhbGciOiJIuzI1NiIsInR5cCI6...'
+        '401':
+          description: Credenciales incorrectas.
+        '500':
+          description: Error interno del servidor.
+  /api/reservas:
+    post:
+      summary: Crea una nueva reserva (Manual).
+      tags: [Reservas]
+      # --- 4. AÑADE ESTO PARA INDICAR QUE ES UNA RUTA PROTEGIDA ---
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [asiento_id, nombre_pasajero, cui, con_equipaje]
+              properties:
+                asiento_id:
+                  type: integer
+                  description: El ID del asiento (de la tabla Asientos).
+                  example: 15
+                nombre_pasajero:
+                  type: string
+                  example: 'Patricia Perez'
+                cui:
+                  type: string
+                  description: CUI de 13 dígitos del pasajero.
+                  example: '1265455890306'
+                con_equipaje:
+                  type: boolean
+                  description: True si el pasajero lleva equipaje.
+                  example: true
+      responses:
+        '201':
+          description: Reserva creada exitosamente.
+        '400':
+          description: Error de validación (CUI inválido, asiento ocupado, etc.).
+        '401':
+          description: No autorizado (Token no válido o expirado).
+        '500':
+          description: Error interno del servidor.

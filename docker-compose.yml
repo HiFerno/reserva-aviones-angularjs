@@ -1,0 +1,30 @@
+services:
+  # Define el servicio de la base de datos
+  postgres_db:
+    image: postgres:14-alpine # Usa una imagen oficial y ligera de PostgreSQL
+    container_name: db_vuelos # Nombre del contenedor
+    ports:
+      - "5432:5432" # Mapea el puerto 5432 de tu máquina al 5432 del contenedor
+    environment:
+      # Variables de entorno para la configuración de Postgres
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=adminpass
+      - POSTGRES_DB=reservas_vuelos
+    volumes:
+      # Monta el script de inicialización
+      # Esto ejecutará init.sql la PRIMERA vez que se cree el contenedor
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      # Monta un volumen para persistir los datos de la BD
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - red-vuelos # Conecta el contenedor a una red personalizada
+
+# Define los volúmenes
+volumes:
+  postgres-data:
+    driver: local
+
+# Define las redes
+networks:
+  red-vuelos:
+    driver: bridge
