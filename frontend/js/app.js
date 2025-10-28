@@ -5,7 +5,7 @@ angular.module('appVuelos', ['ngRoute'])
 .constant('API_URL', 'http://localhost:4000/api')
 
 // 3. Configurar las rutas
-.config(function($routeProvider) {
+.config(function($routeProvider, $httpProvider) {
     $routeProvider
         .when('/login', {
             templateUrl: 'vistas/inicio-sesion.html',
@@ -60,6 +60,7 @@ angular.module('appVuelos', ['ngRoute'])
         .otherwise({
             redirectTo: '/login'
         });
+    $httpProvider.interceptors.push('AuthInterceptor');
 })
 
 // 4. Configurar la seguridad (el .run se ejecuta 1 vez al inicio)

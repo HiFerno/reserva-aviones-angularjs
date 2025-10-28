@@ -4,71 +4,48 @@
             <div class="column is-two-thirds">
                 <div class="box">
                     <h1 class="title texto-neon">MODIFICAR RESERVA</h1>
-                    <p class="subtitle">Ingrese CUI y Asiento para buscar la reserva.</p>
+                    <p class="subtitle">Solo se permite cambiar por un asiento de la misma clase.</p>
                     
-                    <form ng-submit="vm.buscarReserva()">
-                        <div class="notification is-danger" ng-if="vm.errorBusqueda">
-                            {{ vm.errorBusqueda }}
-                        </div>
-                        <div class="notification is-success" ng-if="vm.exitoModificacion">
-                            {{ vm.exitoModificacion }}
-                        </div>
+                    <form ng-submit="vm.confirmarModificacion()">
                         
+                        <div class="notification is-danger" ng-if="vm.error">
+                            {{ vm.error }}
+                        </div>
+                        <div class="notification is-success" ng-if="vm.exito">
+                            {{ vm.exito }}
+                        </div>
+
                         <div class="field">
                             <label class="label">CUI del Pasajero</label>
                             <div class="control">
                                 <input class="input" type="text" placeholder="Ej: 1265455890306"
-                                    ng-model="vm.busqueda.cui" required>
+                                    ng-model="vm.modificacion.cui" required>
                             </div>
                         </div>
                         
                         <div class="field">
                             <label class="label">Número de Asiento Actual</label>
                             <div class="control">
-                                <input class="input" type="text" placeholder="Ej: A1"
-                                    ng-model="vm.busqueda.numero_asiento_actual" required>
+                                <input class="input" type="text" placeholder="Ej: I3"
+                                    ng-model="vm.modificacion.numero_asiento_actual" required>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Número de Asiento Nuevo</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Ej: I5"
+                                    ng-model="vm.modificacion.numero_asiento_nuevo" required>
                             </div>
                         </div>
                         
                         <div class="field">
-                            <button class="button is-primary is-fullwidth" 
-                                    type="submit" ng-disabled="vm.cargandoBusqueda">
-                                {{ vm.cargandoBusqueda ? 'BUSCANDO...' : 'Buscar Reserva' }}
+                            <button class="button is-success is-fullwidth" 
+                                    type="submit" ng-disabled="vm.cargando">
+                                {{ vm.cargando ? 'MODIFICANDO...' : 'Confirmar Modificación' }}
                             </button>
                         </div>
                     </form>
-                    
-                    <div class="box" style="background-color: rgba(0,0,0,0.5); margin-top: 20px;"
-                        ng-if="vm.reservaEncontrada">
-                        
-                        <h2 class="title is-5">DATOS DE LA NUEVA RESERVA</h2>
-                        <p class="subtitle is-6">Modificación solo permite cambiar asiento del mismo tipo.</p>
-
-                        <div class="notification is-danger" ng-if="vm.errorModificacion">
-                            {{ vm.errorModificacion }}
-                        </div>
-
-                        <form ng-submit="vm.confirmarModificacion()">
-                            <div class="field">
-                                <label class="label">Nuevo Asiento</label>
-                                <div class="control">
-                                    <input class="input" type="text" placeholder="Ej: A2"
-                                        ng-model="vm.modificacion.numero_asiento_nuevo" required>
-                                </div>
-                            </div>
-                            
-                            <p class="subtitle is-5">Costo Adicional (10%): 
-                                <span class="texto-neon">{{ vm.costoAdicional | currency:'Q' }}</span>
-                            </p>
-
-                            <div class="field">
-                                <button class="button is-success is-fullwidth" 
-                                        type="submit" ng-disabled="vm.cargandoModificacion">
-                                    {{ vm.cargandoModificacion ? 'CONFIRMANDO...' : 'Confirmar Modificación' }}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
                 </div>
             </div>
         </div>
