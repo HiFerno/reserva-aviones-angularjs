@@ -34,6 +34,8 @@ app.use('/api', require('./rutas/asientos.rutas'));
 app.use('/api', require('./rutas/asientos.rutas'));
 app.use('/api/auth', require('./rutas/auth.rutas.js'));
 app.use('/api/reservas', require('./rutas/reservas.rutas.js'));
+app.use('/api/reportes', require('./rutas/reportes.rutas.js')); 
+app.use('/api/archivos', require('./rutas/archivos.rutas.js')); 
 
 // --- CAMBIOS PARA SWAGGER ---
 // Servir la documentación usando el objeto cargado del archivo

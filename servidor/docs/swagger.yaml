@@ -20,6 +20,10 @@ tags:
     description: Operaciones de registro e inicio de sesión.
   - name: Reservas
     description: Operaciones para crear y gestionar reservas (Protegido).
+  - name: Reportes
+    description: Obtener estadísticas y reportes del sistema (Protegido).
+  - name: Archivos XML
+    description: Carga y descarga masiva de reservas (Protegido).
 
 paths:
   /api/asientos:
@@ -196,8 +200,6 @@ paths:
           description: Error (asientos no coinciden, nuevo asiento ocupado, misma clase, etc.).
         '401':
           description: No autorizado (Token no válido).
-          
-    # --- AÑADIR ESTE BLOQUE DELETE ---
     delete:
       summary: Cancela una reserva existente.
       tags: [Reservas]
@@ -226,3 +228,65 @@ paths:
           description: Error (los datos no coinciden).
         '401':
           description: No autorizado (Token no válido).
+  /api/reportes:
+    get:
+      summary: Obtiene un resumen de estadísticas del sistema.
+      tags: [Reportes]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Objeto con todas las estadísticas.
+        '401':
+          description: No autorizado.
+  /api/archivos/descargar-xml:
+    get:
+      summary: Descarga un archivo XML con todas las reservas. 
+      tags: [Archivos XML]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Un archivo XML.
+          content:
+            application/xml:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: No autorizado.
+  /api/archivos/cargar-xml:
+    post:
+      summary: Carga un archivo XML para procesar reservas masivas. 
+      tags: [Archivos XML]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                archivo: # Este 'archivo' debe coincidir con upload.single('archivo')
+                  type: string
+                  format: binary
+                  description: El archivo .xml a procesar.
+      responses:
+        '200':
+          description: Resumen de la carga. 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  asientos_cargados_exito:
+                    type: integer
+                  asientos_con_error:
+                    type: integer
+                  tiempo_procesamiento_ms:
+                    type: number
+        '400':
+          description: No se subió archivo o el formato es inválido.
+        '401':
+          description: No autorizado.
