@@ -319,5 +319,7 @@ module.exports = {
 };
 
 module.exports = {
-    crearReserva
+    crearReserva,
+    modificarReserva, // <-- Asegúrate que esta línea exista
+    cancelarReserva
 };

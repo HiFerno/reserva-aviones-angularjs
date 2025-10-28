@@ -1,22 +1,23 @@
 const { Router } = require('express');
-const { crearReserva,
-        modificarReserva,
-        cancelarReserva
-    } = require('../controladores/reservas.controlador');
-const validarJWT = require('../middleware/validarJWT'); // <-- Importamos el middleware
+const { 
+    crearReserva,
+    modificarReserva,
+    cancelarReserva
+} = require('../controladores/reservas.controlador');
+const validarJWT = require('../middleware/validarJWT');
 
 const router = Router();
 
-// Esta ruta ahora está protegida.
-// 1. Primero se ejecuta validarJWT.
-// 2. Si el token es válido, pasa a crearReserva.
-// 3. Si no es válido, validarJWT devuelve un error 401.
-router.post('/', [validarJWT], crearReserva);
-// [PATCH] Modificar una reserva (Ruta nueva)
-// Usamos PATCH porque es una actualización parcial (solo cambia el asiento_id)
-router.patch('/', [validarJWT], modificarReserva);
+// [POST] Crear reserva
+// CORRECCIÓN: 'validarJWT' y 'crearReserva' van DENTRO del mismo array.
+router.post('/', [validarJWT, crearReserva]);
 
-// [DELETE] Cancelar una reserva (Ruta nueva)
-router.delete('/', [validarJWT], cancelarReserva);
+// [PATCH] Modificar una reserva
+// CORRECCIÓN: 'validarJWT' y 'modificarReserva' van DENTRO del mismo array.
+router.patch('/', [validarJWT, modificarReserva]);
+
+// [DELETE] Cancelar una reserva
+// CORRECCIÓN: 'validarJWT' y 'cancelarReserva' van DENTRO del mismo array.
+router.delete('/', [validarJWT, cancelarReserva]);
 
 module.exports = router;
