@@ -18,8 +18,6 @@ angular.module('appVuelos')
             return config;
         };
         
-        // (Aquí también se podría manejar el 'responseError', por ejemplo,
-        // si la API devuelve 401, podríamos forzar un logout)
 
         return interceptorFactory;
     });

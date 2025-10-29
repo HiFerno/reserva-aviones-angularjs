@@ -1,10 +1,10 @@
-// 1. Definir el módulo principal (appVuelos) e inyectar 'ngRoute'
+// ACA DEFINO EL MODULO PRINCIPAL Y LE INYECTO NGROUTE, LO BASICO PARA LA APP
 angular.module('appVuelos', ['ngRoute'])
 
-// 2. Definir constantes (URL de la API)
+// CONSTANTE CON LA URL BASE DE LA API, CAMBIAR SI CORRE EL BACKEND EN OTRO LUGAR
 .constant('API_URL', 'http://localhost:4000/api')
 
-// 3. Configurar las rutas
+// ACÁ CONFIGURO LAS RUTAS, LOS CONTROLLERS Y QUIEN PUEDE VER CADA UNA
 .config(function($routeProvider, $httpProvider) {
     $routeProvider
         .when('/login', {
@@ -12,21 +12,21 @@ angular.module('appVuelos', ['ngRoute'])
             controller: 'AuthController',
             controllerAs: 'vm',
             proteger: false,
-            mostrarNavbar: false // Ocultar navbar en login
+            mostrarNavbar: false // NO MOSTRAR NAVBAR EN LOGIN, ASÍ NO SE VE LA BARRA
         })
         .when('/registro', {
             templateUrl: 'vistas/registro.html',
             controller: 'AuthController',
             controllerAs: 'vm',
             proteger: false,
-            mostrarNavbar: false // Ocultar navbar en registro
+            mostrarNavbar: false // TAMPOCO EN REGISTRO
         })
         .when('/principal', {
             templateUrl: 'vistas/principal.html',
             controller: 'PrincipalController',
             controllerAs: 'vm',
-            proteger: true, // Esta ruta SÍ está protegida
-            mostrarNavbar: true // Mostrar navbar
+            proteger: true, // ESTA RUTA SIEMPRE PIDE TOKEN
+            mostrarNavbar: true // MOSTRAR LA NAVBAR CUANDO ESTEMOS ADENTRO
         })
         .when('/modificar', {
             templateUrl: 'vistas/modificar.html',
@@ -56,47 +56,47 @@ angular.module('appVuelos', ['ngRoute'])
             proteger: true,
             mostrarNavbar: true
         })
-        // Ruta por defecto
+        // RUTA POR DEFECTO, SI NO ENCUENTRA NADA REDIRIJO AL LOGIN
         .otherwise({
             redirectTo: '/login'
         });
+    // AQUI AGREGO EL INTERCEPTOR QUE SE ENCARGA DEL TOKEN EN LAS PETICIONES
     $httpProvider.interceptors.push('AuthInterceptor');
 })
 
-// 4. Configurar la seguridad (el .run se ejecuta 1 vez al inicio)
+// ESTA PARTE SE EJECUTA UNA VEZ AL ARRANQUE, LA USO PARA CONTROLAR ACCESO Y NAVBAR
 .run(function($rootScope, $location, $window) {
     
-    // Escuchar cada vez que la ruta esté a punto de cambiar
+    // CUANDO VA A CAMBIAR LA RUTA, LO CHEQUEO
     $rootScope.$on('$routeChangeStart', function(event, nextRoute) {
         
-        // 1. Verificar si la ruta está protegida
+        // SI LA RUTA ESTA PROTEGIDA, ME FIJO SI HAY TOKEN EN LOCALSTORAGE
         if (nextRoute.proteger) {
-            // 2. Si está protegida, buscar el token en localStorage
             const token = $window.localStorage.getItem('token-vuelos');
             if (!token) {
-                // 3. Si no hay token, redirigir al login
+                // SI NO HAY TOKEN, FORZO AL USUARIO A IR AL LOGIN
                 $location.path('/login');
             }
         }
 
-        // 4. Mostrar u ocultar el Navbar según la configuración de la ruta
-        // (Esto se usará en MainController)
+        // ACTUALIZO LA VARIABLE GLOBAL PARA MOSTRAR U OCULTAR LA NAVBAR (LA USA MAINCONTROLLER)
         $rootScope.mostrarNavbar = nextRoute.mostrarNavbar;
     });
 });
 
 
+/* ESTE DIRECTIVE LO USO PARA ENLAZAR INPUT FILE CON UNA VARIABLE EN EL SCOPE
+   ANGULAR NO LO HACE DIRECTO, ASI QUE LO MANEJO A MANO */
 angular.module('appVuelos')
     .directive('fileModel', function($parse) {
         return {
-            restrict: 'A', // Solo usar como atributo
+            restrict: 'A', // USAR COMO ATRIBUTO: <input file-model="vm.archivo" />
             link: function(scope, element, attrs) {
                 const model = $parse(attrs.fileModel);
                 const modelSetter = model.assign;
                 
-                // Cuando el valor del input cambia...
+                // CUANDO CAMBIA EL INPUT (SELECCIONAN UN ARCHIVO) ACTUALIZO LA VARIABLE
                 element.bind('change', function() {
-                    // ...actualiza la variable en el scope.
                     scope.$apply(function() {
                         modelSetter(scope, element[0].files[0]);
                     });
