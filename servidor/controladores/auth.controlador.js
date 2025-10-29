@@ -7,6 +7,32 @@ const enviarEmail = require('../utils/enviarEmail');
 const registrarUsuario = async (req, res) => {
     const { correo_electronico, contrasena } = req.body;
 
+    // --- INICIO DE LA NUEVA VALIDACIÓN ---
+    if (!contrasena) {
+        return res.status(400).json({ error: 'La contraseña es obligatoria.' });
+    }
+
+    const errores = [];
+    if (contrasena.length < 8) {
+        errores.push('La contraseña debe tener al menos 8 caracteres.');
+    }
+    if (!/[a-z]/.test(contrasena)) {
+        errores.push('La contraseña debe contener al menos una minúscula.');
+    }
+    if (!/[A-Z]/.test(contrasena)) {
+        errores.push('La contraseña debe contener al menos una mayúscula.');
+    }
+    // Expresión regular para caracteres especiales
+    const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    if (!specialCharRegex.test(contrasena)) {
+        errores.push('La contraseña debe contener al menos un caracter especial.');
+    }
+
+    if (errores.length > 0) {
+        // Si hay algún error, los unimos y los devolvemos
+        return res.status(400).json({ error: errores.join(' ') });
+    }
+
     try {
         // 1. Verificar si el correo ya existe
         const usuarioExistente = await db.query(

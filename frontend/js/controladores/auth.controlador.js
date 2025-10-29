@@ -47,6 +47,35 @@ angular.module('appVuelos')
             vm.error = '';
             vm.exito = '';
 
+            const contrasena = vm.usuario.contrasena;
+
+            if (!contrasena) {
+                vm.cargando = false;
+                vm.error = 'La contraseña es obligatoria.';
+                return;
+            }
+
+            const errores = [];
+            if (contrasena.length < 8) {
+                errores.push('Mínimo 8 caracteres.');
+            }
+            if (!/[a-z]/.test(contrasena)) {
+                errores.push('Debe tener una minúscula.');
+            }
+            if (!/[A-Z]/.test(contrasena)) {
+                errores.push('Debe tener una mayúscula.');
+            }
+            const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+            if (!specialCharRegex.test(contrasena)) {
+                errores.push('Debe tener un caracter especial.');
+            }
+
+            if (errores.length > 0) {
+                vm.cargando = false;
+                vm.error = 'Contraseña no segura: ' + errores.join(' ');
+                return; // Detiene la ejecución
+            }
+
             // Pequeña validación en el frontend
             if (vm.usuario.contrasena !== vm.usuario.confirmar_contrasena) {
                 vm.cargando = false;
