@@ -84,3 +84,23 @@ angular.module('appVuelos', ['ngRoute'])
         $rootScope.mostrarNavbar = nextRoute.mostrarNavbar;
     });
 });
+
+
+angular.module('appVuelos')
+    .directive('fileModel', function($parse) {
+        return {
+            restrict: 'A', // Solo usar como atributo
+            link: function(scope, element, attrs) {
+                const model = $parse(attrs.fileModel);
+                const modelSetter = model.assign;
+                
+                // Cuando el valor del input cambia...
+                element.bind('change', function() {
+                    // ...actualiza la variable en el scope.
+                    scope.$apply(function() {
+                        modelSetter(scope, element[0].files[0]);
+                    });
+                });
+            }
+        };
+    });

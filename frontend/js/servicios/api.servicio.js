@@ -26,7 +26,32 @@ angular.module('appVuelos')
             return $http.delete(API_URL + '/reservas', { params: datosCancelacion });
         };
 
-        // (Añadiremos reportes y archivos aquí después)
+        // --- AÑADIR: REPORTES ---
+        apiFactory.obtenerReportes = function() {
+            return $http.get(API_URL + '/reportes');
+        };
+
+        // --- AÑADIR: DESCARGAR XML ---
+        apiFactory.descargarXML = function() {
+            // Le pedimos a Angular que espere una respuesta tipo 'blob' (un archivo)
+            // en lugar de JSON.
+            return $http.get(API_URL + '/archivos/descargar-xml', {
+                responseType: 'blob' 
+            });
+        };
+
+        // --- AÑADIR: CARGAR XML ---
+        apiFactory.cargarXML = function(archivo) {
+            // FormData es la forma estándar de enviar archivos en HTTP
+            const fd = new FormData();
+            fd.append('archivo', archivo); // 'archivo' debe coincidir con el backend
+
+            return $http.post(API_URL + '/archivos/cargar-xml', fd, {
+                // Trucos para que Angular maneje FormData correctamente:
+                transformRequest: angular.identity,
+                headers: { 'Content-Type': undefined }
+            });
+        };
 
         return apiFactory;
     });
