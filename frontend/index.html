@@ -12,28 +12,29 @@
     <nav class.="navbar" role="navigation" aria-label="main navigation" ng-if="vm.mostrarNavbar">
         <div class="navbar-brand">
             <a class="navbar-item" href="#!/principal">
-                <img src="img/logo-jetroute.png" alt="Logo de JetRoute" style="max-height: 32px; width: auto;">
+                <img src="img/logo-jetroute.png" alt="Logo de JetRoute" style="max-height: 64px; width: auto;">
             </a>
             <a role="button" class="navbar-burger" ng-class="{ 'is-active': vm.menuActivo }" ng-click="vm.toggleMenu()">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
             </a>
-        </div>
-        <div id="menuNavbar" class="navbar-menu" ng-class="{ 'is-active': vm.menuActivo }">
-            <div class="navbar-start">
-                <a class="navbar-item" href="#!/principal">Reservar Asientos</a>
-                <a class="navbar-item" href="#!/modificar">Modificar Reserva</a>
-                <a class="navbar-item" href="#!/cancelar">Cancelar Reserva</a>
-                <a class="navbar-item" href="#!/reportes">Reportes</a>
-                <a class="navbar-item" href="#!/archivos">Archivos XML</a>
-            </div>
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <a class="button is-primary" ng-click="vm.logout()">
-                            <strong>CERRAR SESION</strong>
-                        </a>
+        
+            <div id="menuNavbar" class="navbar-menu" ng-class="{ 'is-active': vm.menuActivo }">
+                <div class="navbar-start">
+                    <a class="navbar-item" href="#!/principal">Reservar Asientos</a>
+                    <a class="navbar-item" href="#!/modificar">Modificar Reserva</a>
+                    <a class="navbar-item" href="#!/cancelar">Cancelar Reserva</a>
+                    <a class="navbar-item" href="#!/reportes">Reportes</a>
+                    <a class="navbar-item" href="#!/archivos">Archivos XML</a>
+                </div>
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a class="button is-primary" ng-click="vm.logout()">
+                                <strong>CERRAR SESION</strong>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
