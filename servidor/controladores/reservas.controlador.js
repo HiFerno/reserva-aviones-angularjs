@@ -279,7 +279,7 @@ const cancelarReserva = async (req, res) => {
             throw new Error('Cancelación fallida. Los datos (CUI, Asiento) no coinciden o la reserva no le pertenece.');
         }
 
-        // ... (el resto de la función para enviar email y hacer COMMIT es igual) ...
+        
         const { correo, nombre_pasajero } = resCancelada.rows[0];
 
         // 3. Enviar email de confirmación
@@ -309,7 +309,7 @@ const cancelarReserva = async (req, res) => {
     } catch (error) {
         await cliente.query('ROLLBACK');
         console.error('Error al cancelar la reserva:', error);
-        // Ahora sí devolverá el error correcto
+        
         res.status(400).json({ error: error.message || 'Error interno al procesar la cancelación.' });
     } finally {
         cliente.release();
@@ -326,6 +326,6 @@ module.exports = {
 
 module.exports = {
     crearReserva,
-    modificarReserva, // <-- Asegúrate que esta línea exista
+    modificarReserva,
     cancelarReserva
 };
