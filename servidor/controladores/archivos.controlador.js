@@ -74,15 +74,25 @@ const cargarXML = async (req, res) => {
         const parser = new XMLParser();
         const jsonObj = parser.parse(xmlData);
 
-        const asientos = jsonObj.flightReservation?.flightSeat || [];
-        if (!Array.isArray(asientos)) {
-            throw new Error('Formato XML no válido: "flightSeat" no es un array o no existe.');
-        }
+        // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
+        let asientos = []; // Empezar con un array vacío
+        const flightSeatData = jsonObj.flightReservation?.flightSeat;
 
+        if (flightSeatData) {
+            if (Array.isArray(flightSeatData)) {
+                // Caso 1: Múltiples asientos, ya es un array
+                asientos = flightSeatData;
+            } else {
+                // Caso 2: Un solo asiento, es un objeto. ¡Lo envolvemos en un array!
+                asientos = [flightSeatData];
+            }
+        }
+    // Ya no necesitamos la vieja comprobación de 'Array.isArray'
+    // porque 'asientos' SIEMPRE será un array.
+    // --- FIN DE LA CORRECCIÓN ---
         const cliente = await db.pool.connect();
     
         // 4. Procesar cada asiento uno por uno
-        // (Usamos un 'for...of' para poder usar 'await' dentro del loop)
         for (const asiento of asientos) {
             try {
                 await cliente.query('BEGIN');
@@ -91,7 +101,6 @@ const cargarXML = async (req, res) => {
                 const email = asiento.user;
                 const numero_asiento = asiento.seatNumber;
                 const cui = asiento.idNumber;
-
                 if (!email || !numero_asiento || !cui) {
                     throw new Error('Datos incompletos (user, seatNumber, idNumber).');
                 }
@@ -119,11 +128,10 @@ const cargarXML = async (req, res) => {
                 const asiento_id = resAsiento.rows[0].asiento_id;
                 const precio_base = parseFloat(resAsiento.rows[0].precio);
         
-                // (Asumimos que no es VIP y no aplicamos descuento en carga masiva)
                 // 6. Insertar la reserva
                 await cliente.query(
                     `INSERT INTO Reservas (usuario_id, asiento_id, nombre_pasajero, cui, con_equipaje, precio_final)
-                        VALUES ($1, $2, $3, $4, $5, $6)`,
+                    VALUES ($1, $2, $3, $4, $5, $6)`,
                     [
                         usuario_id,
                         asiento_id,
@@ -137,7 +145,7 @@ const cargarXML = async (req, res) => {
                 await cliente.query('COMMIT');
                 asientos_exitosos++;
             } catch (error) {
-                // Requisito: Informar errores y continuar [cite: 103]
+                // Requisito: Informar errores y continuar
                 await cliente.query('ROLLBACK');
                 console.error(`Error al cargar asiento ${asiento.seatNumber}: ${error.message}`);
                 asientos_error++;
@@ -148,14 +156,13 @@ const cargarXML = async (req, res) => {
         const tiempoFin = performance.now();
         const tiempo_total_ms = (tiempoFin - tiempoInicio);
 
-        // 7. Devolver el resumen 
+        // 7. Devolver el resumen
         res.json({
             mensaje: 'Carga de XML completada.',
             asientos_cargados_exito: asientos_exitosos,
             asientos_con_error: asientos_error,
             tiempo_procesamiento_ms: tiempo_total_ms
         });
-
     } catch (error) {
         console.error('Error al cargar XML:', error);
         res.status(500).json({ error: error.message || 'Error interno del servidor.' });
