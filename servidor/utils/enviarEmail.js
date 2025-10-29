@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
 const enviarEmail = async (destinatario, asunto, html) => {
     try {
         const info = await transporter.sendMail({
-            from: `"Sistema de Reservas ✈️" <${process.env.EMAIL_USER}>`,
+            from: `"Sistema de Reservas - JETROUTE ✈️" <${process.env.EMAIL_USER}>`,
             to: destinatario,
             subject: asunto,
             html: html,

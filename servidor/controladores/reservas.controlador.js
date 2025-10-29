@@ -202,7 +202,7 @@ const modificarReserva = async (req, res) => {
             [asiento_id_nuevo, nuevo_precio_final, reserva_id]
         );
 
-        // 7. Enviar email de confirmación [cite: 58]
+        // 7. Enviar email de confirmación
         const htmlEmail = `
             <div style="font-family: Arial, sans-serif; line-height: 1.6;">
                 <h1 style="color: #F26838;">¡Reserva Modificada!</h1>
@@ -218,7 +218,7 @@ const modificarReserva = async (req, res) => {
         `;
         await enviarEmail(
             correo_pasajero, 
-            `✈️ Modificación de Reserva - Nuevo Asiento ${numero_asiento_nuevo}`,
+            `✈️JETROUTE✈️ Modificación de Reserva - Nuevo Asiento ${numero_asiento_nuevo}`,
             htmlEmail
         );
 
@@ -297,7 +297,7 @@ const cancelarReserva = async (req, res) => {
         `;
         await enviarEmail(
             correo, 
-            `✈️ Cancelación de Reserva - Asiento ${numero_asiento}`,
+            `✈️JETROUTE✈️ Cancelación de Reserva - Asiento ${numero_asiento}`,
             htmlEmail
         );
     

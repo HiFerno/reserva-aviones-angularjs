@@ -17,11 +17,9 @@ const validarCUI = (cui) => {
   // 3. Validación de Departamentos y Municipios
   // AVISO: Una validación completa (requerida por el PDF) necesitaría
   // una lista de todos los códigos de 22 departamentos y 340 municipios.
-  // Por ahora, validamos la estructura general.
+    //SE VERIFICA LO BASICO
   // const depto = cui.substring(9, 11);
   // const muni = cui.substring(11, 13);
-  // Aquí iría la lógica para comprobar 'depto' y 'muni' contra una lista real.
-
     return true;
 };
 

@@ -74,7 +74,6 @@ const cargarXML = async (req, res) => {
         const parser = new XMLParser();
         const jsonObj = parser.parse(xmlData);
 
-        // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
         let asientos = []; // Empezar con un array vacío
         const flightSeatData = jsonObj.flightReservation?.flightSeat;
 
@@ -87,9 +86,7 @@ const cargarXML = async (req, res) => {
                 asientos = [flightSeatData];
             }
         }
-    // Ya no necesitamos la vieja comprobación de 'Array.isArray'
-    // porque 'asientos' SIEMPRE será un array.
-    // --- FIN DE LA CORRECCIÓN ---
+
         const cliente = await db.pool.connect();
     
         // 4. Procesar cada asiento uno por uno
