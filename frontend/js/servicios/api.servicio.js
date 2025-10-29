@@ -23,10 +23,10 @@ angular.module('appVuelos')
         apiFactory.cancelarReserva = function(datosCancelacion) {
             // (DELETE /api/reservas)
             // $http.delete es especial, los datos van en un objeto 'config'
-            return $http.delete(API_URL + '/reservas', { data: datosCancelacion });
+            return $http.delete(API_URL + '/reservas', { params: datosCancelacion });
         };
 
         // (Añadiremos reportes y archivos aquí después)
-        
+
         return apiFactory;
     });

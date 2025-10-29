@@ -241,20 +241,24 @@ const modificarReserva = async (req, res) => {
 };
 
 
-// --- CANCELAR RESERVA ---
 const cancelarReserva = async (req, res) => {
-    // ID del agente logueado
+  // ID del agente logueado
     const { id: usuario_id } = req.usuario;
-    // Datos para la cancelación
-    const { cui, numero_asiento } = req.body;
 
+    // --- CAMBIO ---
+    // Leemos desde 'req.query' (parámetros de URL) en lugar de 'req.body'
+    const { cui, numero_asiento } = req.query; 
+    
     const cliente = await db.pool.connect();
 
     try {
+    // Ponemos esta validación simple aquí por si 'cui' o 'numero_asiento' llegan vacíos
+        if (!cui || !numero_asiento) {
+            throw new Error('El CUI y el Número de Asiento son obligatorios.');
+        } 
         await cliente.query('BEGIN');
 
         // 1. Buscar y eliminar la reserva en un solo paso
-        // Usamos 'DELETE ... USING ... RETURNING' para obtener los datos antes de borrar
         const resCancelada = await cliente.query(
             `DELETE FROM Reservas r
             USING Asientos a
@@ -267,17 +271,18 @@ const cancelarReserva = async (req, res) => {
                 a.numero_asiento, 
                 (SELECT correo_electronico FROM Usuarios u WHERE u.usuario_id = r.usuario_id) AS correo,
                 r.nombre_pasajero`,
-            [cui, numero_asiento, usuario_id]
+            [cui, numero_asiento, usuario_id] // <-- Esta parte ya funciona bien
         );
 
-        // 2. Verificar si se borró algo 
+        // 2. Verificar si se borró algo
         if (resCancelada.rows.length === 0) {
             throw new Error('Cancelación fallida. Los datos (CUI, Asiento) no coinciden o la reserva no le pertenece.');
         }
 
+        // ... (el resto de la función para enviar email y hacer COMMIT es igual) ...
         const { correo, nombre_pasajero } = resCancelada.rows[0];
 
-        // 3. Enviar email de confirmación [cite: 65]
+        // 3. Enviar email de confirmación
         const htmlEmail = `
             <div style="font-family: Arial, sans-serif; line-height: 1.6;">
                 <h1 style="color: #F26838;">Reserva Cancelada</h1>
@@ -304,6 +309,7 @@ const cancelarReserva = async (req, res) => {
     } catch (error) {
         await cliente.query('ROLLBACK');
         console.error('Error al cancelar la reserva:', error);
+        // Ahora sí devolverá el error correcto
         res.status(400).json({ error: error.message || 'Error interno al procesar la cancelación.' });
     } finally {
         cliente.release();
