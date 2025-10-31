@@ -269,6 +269,32 @@ body::after {
     transform: scale(1.1);
 }
 
+/* --- ESTILO FOOTER --- */
+.footer {
+    /* Mismo fondo que el body */
+    background-color: var(--black); 
+    
+    /* Mismo borde neón que el navbar, pero arriba */
+    border-top: 2px solid var(--orange); 
+    
+    /* Sombra neón */
+    box-shadow: 0 -4px 10px -5px var(--orange);
+    
+    /* Menos espacio vertical*/
+    padding: 2rem 1.5rem 2.5rem; 
+}
+
+.footer .content p, .footer .content strong {
+    color: var(--cream);
+    opacity: 0.8;
+    font-size: 18px; /* Un poco más pequeño que el texto principal */
+}
+
+.footer .content strong {
+    color: var(--orange);
+    opacity: 1;
+}
+
 /* RESPONSIVE PARA EL MAPA DE ASIENTOS */
 @media (max-width: 768px) {
     .asiento {
