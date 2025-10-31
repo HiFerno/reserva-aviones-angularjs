@@ -1,6 +1,7 @@
 const db = require('../config/db');
 const validarCUI = require('../utils/validarCUI');
 const enviarEmail = require('../utils/enviarEmail');
+const { generarHtmlEmail } = require('../utils/emailTemplate');
 
 const crearReserva = async (req, res) => {
   // 1. Obtener el ID del usuario desde el token (gracias al middleware)
@@ -76,24 +77,25 @@ const crearReserva = async (req, res) => {
         }
 
         // 10. Enviar email de confirmación
-        const htmlEmail = `
-            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-                <h1 style="color: #F26838;">¡Reserva Confirmada!</h1>
-                <p>Tu reserva para el asiento <strong>${numero_asiento}</strong> ha sido completada.</p>
-                <p><strong>Detalles del Pasajero:</strong></p>
-                <ul>
-                    <li><strong>Pasajero:</strong> ${nombre_pasajero}</li>
-                    <li><strong>CUI:</strong> ${cui}</li>
-                    <li><strong>Asiento:</strong> ${numero_asiento}</li>
-                    <li><strong>Equipaje:</strong> ${con_equipaje ? 'Sí' : 'No'}</li>
-                    <li><strong>Precio Pagado:</strong> Q${precio_final.toFixed(2)}</li>
-                </ul>
-                <p>¡Gracias por volar con nosotros!</p>
-            </div>
+        const tituloEmail = '¡Reserva Confirmada!';
+        const cuerpoEmail = `
+            <p style="margin: 0 0 15px 0;">Tu reserva para el asiento <strong style="color: ${'#F26838'};">${numero_asiento}</strong> ha sido completada.</p>
+            <p style="margin: 0 0 10px 0;"><strong>Detalles del Pasajero:</strong></p>
+            <ul style="margin: 0 0 15px 0; padding-left: 20px; list-style-type: square;">
+                <li><strong>Pasajero:</strong> ${nombre_pasajero}</li>
+                <li><strong>CUI:</strong> ${cui}</li>
+                <li><strong>Asiento:</strong> ${numero_asiento}</li>
+                <li><strong>Equipaje:</strong> ${con_equipaje ? 'Sí' : 'No'}</li>
+                <li style="color: ${'#F26838'};"><strong>Precio Pagado:</strong> Q${precio_final.toFixed(2)}</li>
+            </ul>
+            <p style¡Gracias por volar con JetRoute!</p>
         `;
+    
+        const htmlEmail = generarHtmlEmail(tituloEmail, cuerpoEmail);
+        
         await enviarEmail(
             correo_electronico, 
-            `✈️ Confirmación de Reserva - Asiento ${numero_asiento}`,
+            `✈️ Confirmación de Reserva JetRoute - Asiento ${numero_asiento}`,
             htmlEmail
         );
     
@@ -203,22 +205,23 @@ const modificarReserva = async (req, res) => {
         );
 
         // 7. Enviar email de confirmación
-        const htmlEmail = `
-            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-                <h1 style="color: #F26838;">¡Reserva Modificada!</h1>
-                <p>Tu reserva ha sido actualizada exitosamente.</p>
-                <ul>
-                    <li><strong>Asiento Anterior:</strong> ${numero_asiento_actual}</li>
-                    <li><strong>Nuevo Asiento:</strong> ${numero_asiento_nuevo}</li>
-                    <li><strong>CUI del Pasajero:</strong> ${cui}</li>
-                    <li><strong>Costo de Modificación:</strong> Q${costo_modificacion.toFixed(2)}</li>
-                    <li><strong>Nuevo Total:</strong> Q${nuevo_precio_final.toFixed(2)}</li>
-                </ul>
-            </div>
+        const tituloEmail = '¡Reserva Modificada!';
+        const cuerpoEmail = `
+            <p style="margin: 0 0 15px 0;">Tu reserva ha sido actualizada exitosamente.</p>
+            <ul style="margin: 0 0 15px 0; padding-left: 20px; list-style-type: square;">
+                <li><strong>Asiento Anterior:</strong> ${numero_asiento_actual}</li>
+                <li><strong>Nuevo Asiento:</strong> ${numero_asiento_nuevo}</li>
+                <li><strong>CUI del Pasajero:</strong> ${cui}</li>
+                <li style="color: ${'#F26838'};"><strong>Costo Adicional:</strong> Q${costo_modificacion.toFixed(2)}</li>
+                <li style="color: ${'#F26838'};"><strong>Nuevo Total:</strong> Q${nuevo_precio_final.toFixed(2)}</li>
+            </ul>
         `;
+    
+        const htmlEmail = generarHtmlEmail(tituloEmail, cuerpoEmail);
+
         await enviarEmail(
             correo_pasajero, 
-            `✈️JETROUTE✈️ Modificación de Reserva - Nuevo Asiento ${numero_asiento_nuevo}`,
+            `✈️ Modificación de Reserva JetRoute - Nuevo Asiento ${numero_asiento_nuevo}`,
             htmlEmail
         );
 
@@ -283,24 +286,25 @@ const cancelarReserva = async (req, res) => {
         const { correo, nombre_pasajero } = resCancelada.rows[0];
 
         // 3. Enviar email de confirmación
-        const htmlEmail = `
-            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-                <h1 style="color: #F26838;">Reserva Cancelada</h1>
-                <p>Se ha procesado la cancelación de la siguiente reserva:</p>
-                <ul>
-                    <li><strong>Pasajero:</strong> ${nombre_pasajero}</li>
-                    <li><strong>CUI:</strong> ${cui}</li>
-                    <li><strong>Asiento Liberado:</strong> ${numero_asiento}</li>
-                </ul>
-                <p>El asiento ahora está disponible.</p>
-            </div>
+        const tituloEmail = 'Reserva Cancelada';
+        const cuerpoEmail = `
+            <p style="margin: 0 0 15px 0;">Se ha procesado la cancelación de la siguiente reserva:</p>
+            <ul style="margin: 0 0 15px 0; padding-left: 20px; list-style-type: square;">
+                <li><strong>Pasajero:</strong> ${nombre_pasajero}</li>
+                <li><strong>CUI:</strong> ${cui}</li>
+                <li><strong>Asiento Liberado:</strong> ${numero_asiento}</li>
+            </ul>
+            <p style="margin: 0;">El asiento ahora está disponible para una nueva reserva.</p>
         `;
+
+        const htmlEmail = generarHtmlEmail(tituloEmail, cuerpoEmail);
+
         await enviarEmail(
             correo, 
-            `✈️JETROUTE✈️ Cancelación de Reserva - Asiento ${numero_asiento}`,
+            `✈️ Cancelación de Reserva JetRoute - Asiento ${numero_asiento}`,
             htmlEmail
         );
-    
+        
         // 4. Confirmar transacción
         await cliente.query('COMMIT');
 
@@ -324,8 +328,3 @@ module.exports = {
     cancelarReserva  
 };
 
-module.exports = {
-    crearReserva,
-    modificarReserva,
-    cancelarReserva
-};

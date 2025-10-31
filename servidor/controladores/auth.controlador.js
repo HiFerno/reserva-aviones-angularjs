@@ -2,6 +2,7 @@ const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 const generarJWT = require('../utils/generarJWT');
 const enviarEmail = require('../utils/enviarEmail');
+const { generarHtmlEmail } = require('../utils/emailTemplate');
 
 // --- REGISTRO DE USUARIO ---
 const registrarUsuario = async (req, res) => {
@@ -57,19 +58,22 @@ const registrarUsuario = async (req, res) => {
         );
     
         // 4. Enviar email de confirmación 
-        const htmlEmail = `
-            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-                <h1 style="color: #F26838;">¡Bienvenido al Sistema de Reservas!</h1>
-                <p>Hola,</p>
-                <p>Tu cuenta ha sido creada exitosamente con el correo: <strong>${correo_electronico}</strong>.</p>
-                <p>Ya puedes iniciar sesión en la plataforma.</p>
-                <p>¡Gracias!</p>
-            </div>
+        const tituloEmail = '¡Bienvenido a JetRoute!';
+        const cuerpoEmail = `
+            <p style="margin: 0 0 15px 0;">Hola,</p>
+            <p style="margin: 0 0 15px 0;">Tu cuenta de agente ha sido creada exitosamente con el correo: 
+                <strong style="color: ${'#F26838'};">${correo_electronico}</strong>.
+            </p>
+            <p style="margin: 0;">Ya puedes iniciar sesión en la plataforma.</p>
         `;
+    
+        // Generamos el HTML completo
+        const htmlEmail = generarHtmlEmail(tituloEmail, cuerpoEmail);
+        
         await enviarEmail(
             correo_electronico, 
-            '✅ Confirmación de Creación de Cuenta', 
-        htmlEmail
+            `✅ Confirmación de Cuenta - JetRoute`, 
+            htmlEmail
         );
 
         // 5. Responder al frontend
