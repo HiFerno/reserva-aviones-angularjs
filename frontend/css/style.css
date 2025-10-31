@@ -295,6 +295,52 @@ body::after {
     opacity: 1;
 }
 
+/* --- ESTILOS LEYENDA DE ASIENTOS --- */
+.leyenda-item {
+    display: flex;
+    align-items: center;
+    margin-right: 1.5rem; /* Espacio entre items */
+}
+
+.asiento-leyenda {
+    /* Hacemos un cuadrito pequeño */
+    width: 20px;
+    height: 20px;
+    margin-right: 0.5rem; /* Espacio entre el cuadro y el texto */
+    
+    /*quitamos el cursor y hover que tienen los asientos reales */
+    cursor: default;
+    transition: none;
+    transform: none !important; /* Prevenir el zoom del .seleccionado */
+
+    /* Heredamos las clases de borde y color */
+    border: 2px solid;
+}
+
+
+.asiento-leyenda.disponible {
+    border-color: var(--green);
+}
+
+.asiento-leyenda.seleccionado {
+    background-color: var(--cream);
+    border-color: var(--cream);
+}
+
+.asiento-leyenda.ocupado {
+    border-color: var(--orange);
+    background-color: rgba(242, 104, 56, 0.3);
+    /*línea tachada para el cuadrito */
+    background-image: linear-gradient(to top right, transparent 46%, var(--orange) 47%, var(--orange) 53%, transparent 54%);
+}
+
+.leyenda-texto {
+    font-size: 16px;
+    color: var(--cream);
+    opacity: 0.9;
+    text-transform: uppercase; 
+}
+
 /* RESPONSIVE PARA EL MAPA DE ASIENTOS */
 @media (max-width: 768px) {
     .asiento {
