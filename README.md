@@ -133,7 +133,8 @@ Verás un mensaje: Starting up http-server... La aplicación estará disponible 
 Si sigues estos pasos correctamente ya podras utilizar el sistema completo que ofrece este sistema de reserva de asientos de avion
 
 ## Estructura del Proyecto 
-`/jetroute
+```
+/jetroute
 ├── servidor/            # API del servidor (Node.js, Express)
 │   ├── controladores/    # Lógica de negocio (auth, reservas, etc.)
 │   ├── middleware/     # Validadores (JWT)
@@ -153,7 +154,8 @@ Si sigues estos pasos correctamente ya podras utilizar el sistema completo que o
 │   ├── vistas/         # Plantillas HTML parciales (principal.html, login.html, etc.)
 │   └── index.html      # El "cascarón" (Single Page Application)
 ├── docker-compose.yml  # Orquestador de Docker para Postgres
-└── README.md           # Esta guía`
+└── README.md           # Esta guía
+```
 
 
 
