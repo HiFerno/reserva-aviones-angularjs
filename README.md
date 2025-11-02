@@ -20,12 +20,18 @@ https://www.docker.com/products/docker-desktop/
 
 ## 1. Clonacion del Repositorio
 
-> Abre tu terminal y ejecuta el comando
+> Abre gitbash y ejecuta el comando
 ### Bash
 ```markdown
+mkdir proyecto-vuelos
+cd proyecto-vuelos
 git clone https://github.com/HiFerno/reserva-aviones-angularjs.git
 ```
-
+> Entra al directorio del proyecto
+### Bash
+```markdown
+cd reserva-aviones-angularjs
+```
 
 ---
 
