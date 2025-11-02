@@ -12,7 +12,7 @@ const YAML = require('js-yaml'); // Módulo para parsear YAML
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// --- CAMBIOS PARA SWAGGER ---
+
 // Cargar el archivo YAML y convertirlo a un objeto JSON
 let swaggerDocs;
 try {
@@ -21,7 +21,6 @@ try {
 } catch (e) {
     console.error("Error al leer/parsear swagger.yaml:", e);
 }
-// --- FIN CAMBIOS ---
 
 // Middlewares
 app.use(cors()); 
