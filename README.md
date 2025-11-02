@@ -23,3 +23,12 @@ https://www.docker.com/products/docker-desktop/
 ```python
 print("Hola mundo")
 
+
+
+---
+
+### 📐 Separadores
+```markdown
+---
+
+
