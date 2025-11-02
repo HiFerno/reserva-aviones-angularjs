@@ -16,8 +16,13 @@ Antes de empezar, asegúrate de tener el siguiente software instalado en tu máq
 
 - **Git:** https://git-scm.com/install/
 - **Node.js(v18 o superior):** https://nodejs.org/es/download
-- **Docker:** https://www.docker.com/products/docker-desktop/
+- **Docker Desktop:** https://www.docker.com/products/docker-desktop/
 - (Recomendado) Un cliente de base de datos como DBeaver o PgAdmin para verificar la base de datos.
+
+- [Git](https://git-scm.com/install/): Para clonar este repositorio.
+- [Node.js (LTS)](https://nodejs.org/es/download): (v18 o superior) El motor de JavaScript para el backend.
+- [Docker Desktop](www.docker.com/products/docker-desktop/): La forma más sencilla de correr la base de datos (ya incluye Docker Compose).
+- (Opcional) [DBeaver Community](https://dbeaver.io/download/): Un cliente de base de datos espectacular para espiar la base de datos.
 
 
 
@@ -134,7 +139,7 @@ Si sigues estos pasos correctamente ya podras utilizar el sistema completo que o
 
 ## Estructura del Proyecto 
 ```
-/jetroute
+/reserva-aviones-angularjs
 ├── servidor/            # API del servidor (Node.js, Express)
 │   ├── controladores/    # Lógica de negocio (auth, reservas, etc.)
 │   ├── middleware/     # Validadores (JWT)
