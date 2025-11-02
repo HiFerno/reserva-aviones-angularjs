@@ -20,8 +20,9 @@ https://www.docker.com/products/docker-desktop/
 
 ## 1. Clonacion del Repositorio
 ### Bash
-``` git clone https://github.com/HiFerno/reserva-aviones-angularjs.git
-
+```markdown
+git clone https://github.com/HiFerno/reserva-aviones-angularjs.git
+```
 
 
 ---
