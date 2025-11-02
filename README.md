@@ -13,12 +13,6 @@ La aplicación permite a los usuarios registrarse, iniciar sesión, ver un mapa 
 
 ## Prerrequisitos
 Antes de empezar, asegúrate de tener el siguiente software instalado en tu máquina
-
-- **Git:** https://git-scm.com/install/
-- **Node.js(v18 o superior):** https://nodejs.org/es/download
-- **Docker Desktop:** https://www.docker.com/products/docker-desktop/
-- (Recomendado) Un cliente de base de datos como DBeaver o PgAdmin para verificar la base de datos.
-
 - [Git](https://git-scm.com/install/): Para clonar este repositorio.
 - [Node.js (LTS)](https://nodejs.org/es/download): (v18 o superior) El motor de JavaScript para el backend.
 - [Docker Desktop](www.docker.com/products/docker-desktop/): La forma más sencilla de correr la base de datos (ya incluye Docker Compose).
