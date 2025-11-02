@@ -16,6 +16,7 @@ Antes de empezar, asegúrate de tener el siguiente software instalado en tu máq
 - [Git](https://git-scm.com/install/): Para clonar este repositorio.
 - [Node.js (LTS)](https://nodejs.org/es/download): (v18 o superior) El motor de JavaScript para el backend.
 - [Docker Desktop](www.docker.com/products/docker-desktop/): La forma más sencilla de correr la base de datos (ya incluye Docker Compose).
+- [Visual Studio Code](https://code.visualstudio.com/): El IDE de preferencia para la creacion y edicion de archivos de codigo.
 - (Opcional) [DBeaver Community](https://dbeaver.io/download/): Un cliente de base de datos espectacular para espiar la base de datos.
 
 
@@ -43,14 +44,14 @@ docker-compose up -d
 
 ### 3. Coinfigurar el Backend (API)
 #### a. Instalar Dependencias
-Navega a la carpeta del backend/servidor e instala los paquetes de npm.
+Navega a la carpeta reserva-aviones-angularjs\servidor e instala los paquetes de npm.
 #### Bash
 ```markdown
 cd servidor
 npm install
 ```
 #### b. Crear el Archivo de Entorno (.env)
-En la carpeta servidor/, crea un archivo llamado .env y copia el siguiente contenido.
+En la carpeta reserva-aviones-angularjs\servidor, crea un archivo llamado .env y copia el siguiente contenido.
 ### Fragmento de código
 ```markdown
 # Configuración del Servidor
