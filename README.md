@@ -10,10 +10,16 @@ Es recomendado Windows 10/11
 https://git-scm.com/install/
 
 
+
 ### Backend
 #### Node.JS
 https://nodejs.org/es/download
 
-#### 
+#### Docker
+https://www.docker.com/products/docker-desktop/
 
 `código`
+
+```python
+print("Hola mundo")
+
