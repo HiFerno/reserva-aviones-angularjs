@@ -19,6 +19,8 @@ https://nodejs.org/es/download
 https://www.docker.com/products/docker-desktop/
 
 ## 1. Clonacion del Repositorio
+
+> Abre tu terminal y ejecuta el comando
 ### Bash
 ```markdown
 git clone https://github.com/HiFerno/reserva-aviones-angularjs.git
