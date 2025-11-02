@@ -18,12 +18,12 @@ https://nodejs.org/es/download
 #### Docker
 https://www.docker.com/products/docker-desktop/
 
-`código`
-
-```python
-print("Hola mundo")
-
+## 1. Clonacion del Repositorio
+### Bash
+```git clone https://github.com/usuario/repositorio.git
 ```
+
+
 
 ---
 
