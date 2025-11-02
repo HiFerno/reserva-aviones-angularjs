@@ -27,7 +27,7 @@ Antes de empezar, asegúrate de tener el siguiente software instalado en tu máq
 ### 1. Clonar el Repositorio
 
 > Abre gitbash y ejecuta el comando
-### Bash
+#### Bash
 ```markdown
 git clone https://github.com/HiFerno/reserva-aviones-angularjs.git
 cd reserva-aviones-angularjs
@@ -37,7 +37,7 @@ cd reserva-aviones-angularjs
 La base de datos PostgreSQL corre en un contenedor de Docker. El archivo docker-compose.yml en la raíz del proyecto se encarga de todo.
 Asegúrate de estar en la carpeta reserva-aviones-angularjs (donde está tu docker-compose.yml) y ejecuta
 
-### Bash
+#### Bash
 ```markdown
 docker-compose up -d
 ```
@@ -45,7 +45,7 @@ docker-compose up -d
 ### 3. Coinfigurar el Backend (API)
 #### a. Instalar Dependencias
 Navega a la carpeta del backend/servidor e instala los paquetes de npm.
-### Bash
+#### Bash
 ```markdown
 cd servidor
 npm install
