@@ -60,6 +60,7 @@ const cargarXML = async (req, res) => {
     const tiempoInicio = performance.now();
     let asientos_exitosos = 0;
     let asientos_error = 0;
+    const detalles_errores = []; // <-- almacenar detalles de los asientos que fallan
 
     try {
         // 1. Verificar que se haya subido un archivo
@@ -89,25 +90,77 @@ const cargarXML = async (req, res) => {
 
         const cliente = await db.pool.connect();
     
+        // Asegurar existencia de un usuario por defecto para evitar FK violations
+        const DEFAULT_USUARIO_EMAIL = process.env.DEFAULT_USUARIO_EMAIL || 'imported@system.local';
+        let defaultUsuarioId = process.env.DEFAULT_USUARIO_ID ? parseInt(process.env.DEFAULT_USUARIO_ID, 10) : null;
+
+        // Si dieron un ID por env, verificar que exista (no lanzar error si falla la verificación)
+        if (defaultUsuarioId) {
+            try {
+                const rCheck = await cliente.query('SELECT usuario_id FROM Usuarios WHERE usuario_id = $1', [defaultUsuarioId]);
+                if (rCheck.rows.length === 0) defaultUsuarioId = null;
+            } catch (err) {
+                console.warn('No se pudo verificar DEFAULT_USUARIO_ID:', err.message);
+                defaultUsuarioId = null;
+            }
+        }
+
+        if (!defaultUsuarioId) {
+            // Intentar buscar por email o crear usuario por defecto
+            try {
+                const resFind = await cliente.query('SELECT usuario_id FROM Usuarios WHERE correo_electronico = $1', [DEFAULT_USUARIO_EMAIL]);
+                if (resFind.rows.length > 0) {
+                    defaultUsuarioId = resFind.rows[0].usuario_id;
+                } else {
+                    // Intentar crear usuario por defecto (si falla, usaremos fallback)
+                    try {
+                        const resInsert = await cliente.query(
+                            'INSERT INTO Usuarios (correo_electronico, nombre) VALUES ($1, $2) RETURNING usuario_id',
+                            [DEFAULT_USUARIO_EMAIL, 'Import User']
+                        );
+                        defaultUsuarioId = resInsert.rows[0].usuario_id;
+                    } catch (insertErr) {
+                        console.warn('No se pudo crear usuario por defecto:', insertErr.message);
+                        // Fallback: usar cualquier usuario existente
+                        try {
+                            const anyUser = await cliente.query('SELECT usuario_id FROM Usuarios LIMIT 1');
+                            if (anyUser.rows.length > 0) {
+                                defaultUsuarioId = anyUser.rows[0].usuario_id;
+                                console.warn('Usando usuario existente como fallback:', defaultUsuarioId);
+                            } else {
+                                cliente.release();
+                                return res.status(500).json({
+                                    error: 'No hay usuarios en la BD y no se pudo crear usuario por defecto. Defina DEFAULT_USUARIO_ID o cree un usuario en la BD.'
+                                });
+                            }
+                        } catch (anyErr) {
+                            cliente.release();
+                            return res.status(500).json({ error: 'Error al obtener usuario fallback: ' + anyErr.message });
+                        }
+                    }
+                }
+            } catch (findErr) {
+                cliente.release();
+                return res.status(500).json({ error: 'Error al buscar/crear usuario por defecto: ' + findErr.message });
+            }
+        }
+    
         // 4. Procesar cada asiento uno por uno
         for (const asiento of asientos) {
             try {
                 await cliente.query('BEGIN');
         
                 // 5. Validar datos y buscar IDs
-                const email = asiento.user;
+                const email = asiento.user; // ya no se valida/consulta en la BD
                 const numero_asiento = asiento.seatNumber;
                 const cui = asiento.idNumber;
-                if (!email || !numero_asiento || !cui) {
-                    throw new Error('Datos incompletos (user, seatNumber, idNumber).');
+                if (!numero_asiento || !cui) {
+                    throw new Error('Datos incompletos (seatNumber o idNumber).');
                 }
 
-                const resUsuario = await cliente.query('SELECT usuario_id FROM Usuarios WHERE correo_electronico = $1', [email]);
-                if (resUsuario.rows.length === 0) {
-                    throw new Error(`Usuario no encontrado: ${email}`);
-                }
-                const usuario_id = resUsuario.rows[0].usuario_id;
-
+                // Usar siempre el usuario por defecto (no validar existencia del email del XML)
+                const usuario_id = defaultUsuarioId;
+                
                 const resAsiento = await cliente.query(
                     `SELECT a.asiento_id, a.precio, r.reserva_id AS ocupado 
                     FROM Asientos a
@@ -144,8 +197,18 @@ const cargarXML = async (req, res) => {
             } catch (error) {
                 // Requisito: Informar errores y continuar
                 await cliente.query('ROLLBACK');
-                console.error(`Error al cargar asiento ${asiento.seatNumber}: ${error.message}`);
                 asientos_error++;
+
+                // Guardar detalle del error para respuesta (se muestra en Swagger)
+                detalles_errores.push({
+                    seatNumber: asiento.seatNumber || null,
+                    passengerName: asiento.passengerName || null,
+                    user: asiento.user || null,
+                    idNumber: asiento.idNumber || null,
+                    reason: error.message
+                });
+
+                console.error(`Error al cargar asiento ${asiento.seatNumber || 'N/A'}: ${error.message}`);
             }
         }
         cliente.release();
@@ -153,11 +216,12 @@ const cargarXML = async (req, res) => {
         const tiempoFin = performance.now();
         const tiempo_total_ms = (tiempoFin - tiempoInicio);
 
-        // 7. Devolver el resumen
+        // 7. Devolver el resumen, incluyendo detalles de errores
         res.json({
             mensaje: 'Carga de XML completada.',
             asientos_cargados_exito: asientos_exitosos,
             asientos_con_error: asientos_error,
+            detalles_errores: detalles_errores, // <-- aquí están los detalles para Swagger
             tiempo_procesamiento_ms: tiempo_total_ms
         });
     } catch (error) {
